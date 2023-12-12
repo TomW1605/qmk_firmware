@@ -16,6 +16,8 @@
 
 #pragma once
 
+#define DYNAMIC_KEYMAP_LAYER_COUNT 5
+
 /* Key matrix pins */
 #define MATRIX_ROW_PINS { B5, B4, B3, A15, A14, A13 }
 #define MATRIX_COL_PINS { A10, A9, A8, B1, B0, A7, A6, A5, A4, A3, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN }
@@ -43,4 +45,6 @@
 #define CAPS_LOCK_LED_INDEX 61
 
 /* Enable NUM_LOCK_LED_INDEX */
-// #define NUM_LOCK_LED_INDEX 37
+#define NUM_LOCK_LED_INDEX 37
+
+//#define MIDI_ADVANCED
