@@ -10,3 +10,4 @@ VPATH += keyboards/keychron/common
 SRC += keychron_common.c
 
 SRC += rgb_matrix_user_hid.c
+SRC += rgb_matrix_user_eeprom.c

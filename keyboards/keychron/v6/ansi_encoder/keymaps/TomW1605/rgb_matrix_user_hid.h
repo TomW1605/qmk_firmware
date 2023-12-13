@@ -6,6 +6,8 @@
 // #include <quantum/rgb_matrix/rgb_matrix_types.h>
 #include <quantum/via.h>
 
+#include "rgb_matrix_user_eeprom.h"
+
 void custom_qmk_rgb_matrix_command(uint8_t *data, uint8_t length);
 void custom_qmk_rgb_matrix_set_value(uint8_t *data);
 void custom_qmk_rgb_matrix_get_value(uint8_t *data);

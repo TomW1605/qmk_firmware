@@ -1,6 +1,6 @@
 #include "rgb_matrix_user_hid.h"
 
-rgb_config_t rgb_matrix_config_custom;
+extern rgb_config_custom_t rgb_matrix_config_custom;
 
 enum custom_qmk_rgb_matrix_value {
     id_qmk_rgb_matrix_accent_brightness = 1,
@@ -69,5 +69,5 @@ void custom_qmk_rgb_matrix_get_value(uint8_t *data) {
 }
 
 void custom_qmk_rgb_matrix_save(void) {
-    eeconfig_update_rgb_matrix();
+    eeconfig_save_rgb_matrix_custom();
 }

@@ -88,4 +88,5 @@ void housekeeping_task_user(void) {
     housekeeping_task_keychron();
 }
 
-#include "hid.h"
+#include "hid_user.h"
+#include "rgb_matrix_user_eeprom.h"

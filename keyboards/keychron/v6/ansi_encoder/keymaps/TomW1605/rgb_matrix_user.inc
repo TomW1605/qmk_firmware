@@ -4,7 +4,9 @@ RGB_MATRIX_EFFECT(reactive_dual_colour)
 // Define effects inside the `RGB_MATRIX_CUSTOM_EFFECT_IMPLS` ifdef block
 #ifdef RGB_MATRIX_CUSTOM_EFFECT_IMPLS
 
-extern rgb_config_t rgb_matrix_config_custom;
+#include "rgb_matrix_user_eeprom.h"
+
+extern rgb_config_custom_t rgb_matrix_config_custom;
 
 
 // e.g: A more complex effect, relying on external methods and state, with
