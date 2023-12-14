@@ -5,6 +5,7 @@ MOUSEKEY_ENABLE = no
 CONSOLE_ENABLE = yes
 EXTRAKEY_ENABLE = yes
 RGB_MATRIX_CUSTOM_USER = yes
+WPM_ENABLE = yes
 
 VPATH += keyboards/keychron/common
 SRC += keychron_common.c

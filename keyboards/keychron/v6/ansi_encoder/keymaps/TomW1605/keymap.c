@@ -16,8 +16,13 @@
 
 #include QMK_KEYBOARD_H
 #include "keychron_common.h"
+#include "print.h"
 
 // clang-format off
+
+enum {
+	USER_WPM = QK_USER,
+};
 
 enum layers{
   MAC_BASE,
@@ -54,7 +59,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,    _______,    _______,  _______,  _______,  _______,  _______,  _______,  _______,
         RGB_TOG,  RGB_MOD,  RGB_VAI,  RGB_HUI,  RGB_SAI,  RGB_SPI,  _______,  _______,  _______,  _______,  _______,  _______,  _______,    _______,    _______,  _______,  _______,  _______,  _______,  _______,
         _______,  RGB_RMOD, RGB_VAD,  RGB_HUD,  RGB_SAD,  RGB_SPD,  _______,  _______,  _______,  _______,  _______,  _______,              _______,                                  _______,  _______,  _______,  _______,
-        _______,            _______,  _______,  _______,  _______,  QK_BOOT,  NK_TOGG,  _______,  _______,  _______,  _______,              _______,              RGB_RMOD,           _______,  _______,  _______,
+        _______,            _______,  _______,  _______,  _______,  QK_BOOT,  NK_TOGG,  USER_WPM, _______,  _______,  _______,              _______,              RGB_RMOD,           _______,  _______,  _______,
         _______,  _______,  _______,                                _______,                                _______,  _______,  _______,    MO(WIN_FN2),_______,  RGB_MOD,  _______,  _______,            _______,  _______),
     [WIN_FN2] = LAYOUT_ansi_109(
         _______,  KC_BRID,  KC_BRIU,  KC_TASK,  KC_FLXP,  RGB_VAD,  RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,  KC_VOLD,  KC_VOLU,    RGB_TOG,    _______,  _______,  _______,  _______,  _______,  _______,  _______,
@@ -78,6 +83,19 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
 // clang-format on
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+	uprintf("WPM: %d\n", get_current_wpm());
+	uprintf("Key: %d\n", keycode);
+	switch (keycode) {
+        case USER_WPM:
+			uprintf("test WPM: %d\n", get_current_wpm());
+            if (record->event.pressed) {
+                SEND_STRING("Hello, world!\n");
+            }
+            return false;  // Skip all further processing of this key
+        default:
+            return true;  // Process all other keycodes normally
+    }
+	
     if (!process_record_keychron(keycode, record)) {
         return false;
     }

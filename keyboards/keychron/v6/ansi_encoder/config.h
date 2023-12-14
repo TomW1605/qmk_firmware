@@ -48,3 +48,5 @@
 #define NUM_LOCK_LED_INDEX 37
 
 //#define MIDI_ADVANCED
+
+#define WPM_LAUNCH_CONTROL
