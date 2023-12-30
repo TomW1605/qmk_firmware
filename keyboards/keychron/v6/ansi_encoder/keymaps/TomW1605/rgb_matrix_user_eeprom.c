@@ -4,7 +4,7 @@ void eeconfig_save_rgb_matrix_custom(void) {
 	eeconfig_update_user(rgb_matrix_config_custom.raw);
 }
 
-void keyboard_post_init_user(void) {
+void keyboard_post_init_user_rgb_matrix(void) {
   // Call the keymap level matrix init.
 
   // Read the user config from EEPROM

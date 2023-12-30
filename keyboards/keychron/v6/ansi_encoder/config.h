@@ -49,4 +49,7 @@
 
 //#define MIDI_ADVANCED
 
-#define WPM_LAUNCH_CONTROL
+// #define WPM_LAUNCH_CONTROL
+// #define WPM_UNFILTERED
+// #define WPM_SAMPLE_SECONDS 1
+#define WPM_SAMPLE_PERIODS 5

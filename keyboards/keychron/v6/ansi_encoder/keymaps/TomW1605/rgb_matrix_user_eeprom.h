@@ -14,5 +14,5 @@ typedef union {
 rgb_config_custom_t rgb_matrix_config_custom;
 
 void eeconfig_save_rgb_matrix_custom(void);
-void keyboard_post_init_user(void);
+void keyboard_post_init_user_rgb_matrix(void);
 void eeconfig_init_user(void);

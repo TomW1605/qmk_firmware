@@ -82,14 +82,107 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
 
 // clang-format on
 
+#include "hid_user.h"
+#include "rgb_matrix_user_eeprom.h"
+
+uint8_t wpm_history[50];
+uint8_t wpm_history_index = 0;
+uint8_t wpm_current_max = 0;
+bool wpm_init = true;
+uint8_t wpm_last_addition = 0;
+
+uint8_t get_wpm_avg(void) {
+	uint16_t wpm_sum = 0;
+	uint8_t wpm_history_len = ARRAY_SIZE(wpm_history);
+	if (wpm_init && wpm_history_index < wpm_history_len-1) {
+		wpm_history_len = wpm_history_index;
+		wpm_sum = wpm_history[wpm_history_index + 1];
+	}
+	for(uint8_t ii = 0; ii < wpm_history_len; ii++) {
+		wpm_sum += wpm_history[ii];
+	}
+	return (uint8_t)(wpm_sum / wpm_history_len);
+}
+
+uint32_t run_wpm_history(uint32_t trigger_time, void *cb_arg) {
+	if (get_current_wpm() == 0 || wpm_last_addition >= 10) {
+		if (wpm_current_max > 10 && (get_wpm_avg()*0.5 <= wpm_current_max)) {// || wpm_init)) {
+			// if (wpm_init) {
+				// wpm_init = false;
+				// for(uint8_t ii = 0; ii < sizeof(wpm_history)/sizeof(wpm_history[0]); ii++) {
+					// wpm_history[ii] = wpm_current_max;
+				// }
+			// } else {
+			wpm_history[wpm_history_index] = wpm_current_max;
+			// }
+			wpm_history_index++;
+			if (wpm_history_index > 9) {
+				wpm_init = false;
+				wpm_history_index = 0;
+			}
+		}
+		wpm_current_max = 0;
+		wpm_last_addition = 0;
+	} else {
+		wpm_last_addition++;
+	}
+	// uprintf("WPM: %d [%d, %d, %d, %d, %d, %d, %d, %d, %d, %d] = %d\n", get_current_wpm(), wpm_history[0], wpm_history[1], wpm_history[2], wpm_history[3], wpm_history[4], wpm_history[5], wpm_history[6], wpm_history[7], wpm_history[8], wpm_history[9], get_wpm_avg());//get_wpm_avg());
+    return 500;
+}
+
+void keyboard_post_init_user(void) {
+	defer_exec(500, run_wpm_history, NULL);
+	keyboard_post_init_user_rgb_matrix();
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-	uprintf("WPM: %d\n", get_current_wpm());
-	uprintf("Key: %d\n", keycode);
+	// uprintf("WPM: %d\n", get_current_wpm());
+	// uprintf("Key: %d\n", keycode);
+	
+	rgb_matrix_enable_noeeprom();
+	
+	if (get_current_wpm() > wpm_current_max) {
+		wpm_current_max = get_current_wpm();
+	}
+	
 	switch (keycode) {
         case USER_WPM:
-			uprintf("test WPM: %d\n", get_current_wpm());
             if (record->event.pressed) {
-                SEND_STRING("Hello, world!\n");
+				// uint16_t wpm_sum = 0;
+				// for(uint8_t ii = 0; ii < sizeof(wpm_history)/sizeof(wpm_history[0]); ii++) {
+					// wpm_sum += wpm_history[ii];
+				// }
+				// uint16_t wpm_avg = (uint16_t)((float)wpm_sum / ARRAY_SIZE(wpm_history) * 10);
+				// uprintf("WPM: %3d.%02d\n", wpm_avg/10, wpm_avg%10);
+				// char wpm_str[7];
+				// sprintf(wpm_str, "%d.%d", wpm_avg/10, wpm_avg%10);
+				// SEND_STRING(wpm_str);
+				
+				// uint16_t wpm_sum = 0;
+				// for(uint8_t ii = 0; ii < ARRAY_SIZE(wpm_history); ii++) {
+					// wpm_sum += wpm_history[ii];
+				// }
+				// uint8_t wpm_avg = (uint8_t)((float)wpm_sum / ARRAY_SIZE(wpm_history));
+				
+				// uint8_t wpm_avg = get_wpm_avg();
+				
+				// uprintf("[%d, %d, %d, %d, %d, %d, %d, %d, %d, %d] = %d\n", wpm_history[0], wpm_history[1], wpm_history[2], wpm_history[3], wpm_history[4], wpm_history[5], wpm_history[6], wpm_history[7], wpm_history[8], wpm_history[9], get_wpm_avg());//get_wpm_avg());
+				
+				uint8_t wpm_history_len = ARRAY_SIZE(wpm_history);
+				if (wpm_init && wpm_history_index < wpm_history_len-1) {
+					wpm_history_len = wpm_history_index+1;
+				}
+				uprintf("[");
+				for (size_t i = 0; i < (wpm_history_len-1); ++i) {
+					uprintf("%d, ", wpm_history[i]);
+				}
+				uprintf("%d]", wpm_history[wpm_history_len-1]);
+				uprintf(" = %d\n", get_wpm_avg());
+				
+				const char *wpm_avg_str = get_u8_str(get_wpm_avg(), ' ');
+				while (*wpm_avg_str++ == ' ') {}
+				wpm_avg_str--;
+				send_string(wpm_avg_str);
             }
             return false;  // Skip all further processing of this key
         default:
@@ -105,6 +198,3 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 void housekeeping_task_user(void) {
     housekeeping_task_keychron();
 }
-
-#include "hid_user.h"
-#include "rgb_matrix_user_eeprom.h"
