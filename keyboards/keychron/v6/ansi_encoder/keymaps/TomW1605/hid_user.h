@@ -13,9 +13,11 @@
 //	}
 //}
 
-enum via_test_value {
-    id_test   = 1
-};
+// enum via_test_value {
+    // id_test   = 1
+// };
+
+bool pc_sleeping = false;
 
 void via_custom_value_command_kb(uint8_t *data, uint8_t length) {
     // data = [ command_id, channel_id, value_id, value_data ]
@@ -38,8 +40,10 @@ void via_custom_value_command_kb(uint8_t *data, uint8_t length) {
                 uprintf("0x%04X\n", *value_data);
 				if (*value_data) {
 					rgb_matrix_enable_noeeprom();
+					pc_sleeping = false;
 				} else {
 					rgb_matrix_disable_noeeprom();
+					pc_sleeping = true;
 				}
                 break;
             }

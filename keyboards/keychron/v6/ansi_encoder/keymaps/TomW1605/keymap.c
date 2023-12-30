@@ -196,5 +196,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 void housekeeping_task_user(void) {
+	if (pc_sleeping && last_input_activity_elapsed() > 20 * 1000) {
+		rgb_matrix_disable_noeeprom();
+	}
     housekeeping_task_keychron();
 }
